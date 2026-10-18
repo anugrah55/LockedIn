@@ -1,0 +1,57 @@
+# Capture real LockedIn frames for README screenshots.
+# Usage: expect scripts/shots/capture.exp <outdir> <jd-file>
+# Requires LOCKEDIN_HOME to point at an onboarded demo profile.
+set timeout 300
+match_max 200000
+set out [lindex $argv 0]
+set jd [lindex $argv 1]
+set cli [file normalize [file dirname [info script]]/../../dist/cli.js]
+
+# Read (and log) output for a few seconds; sleep would leave it unread.
+proc drain {secs} {
+  expect -timeout $secs -re {@@never@@} {}
+}
+proc start {args} {
+  global cli spawn_id spawn_out
+  eval spawn -noecho node $cli $args
+  stty rows 120 columns 96 < $spawn_out(slave,name)
+}
+proc shot {name} {
+  global out
+  drain 1
+  log_file -noappend "$out/$name.log"
+  # Nudge a repaint so the log holds a complete frame.
+  send "\033\[B"; drain 1; send "\033\[A"; drain 2
+  log_file
+}
+proc wait_for {pat} {
+  expect { -re $pat {} timeout { puts "\nTIMEOUT waiting for: $pat"; exit 1 } eof { puts "\nEOF waiting for: $pat"; exit 1 } }
+}
+
+# 1. Onboarding (step dots + privacy choice). Ctrl+C before anything is saved.
+start init
+wait_for "Which repositories should LockedIn look at"
+shot onboarding
+send "\003"; expect eof
+
+# 2. Home
+start
+wait_for "Quit"
+shot home
+send "\003"; expect eof
+
+# 3. Role picker
+start tailor
+wait_for "Custom role"
+shot roles
+send "\003"; expect eof
+
+# 4. Review + 5. Done (real Claude run)
+start tailor -r backend --jd $jd
+wait_for "Looks good"
+shot review
+send "\r"
+wait_for "Open in Overleaf"
+shot done
+send "\003"; expect eof
+puts "\nCAPTURE_OK"

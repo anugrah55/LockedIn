@@ -23,3 +23,9 @@ export const paths = {
     return path.join(homeDir(), 'outputs');
   },
 };
+
+/** Shorten a path for display: /Users/me/x → ~/x */
+export function displayPath(p: string): string {
+  const home = os.homedir();
+  return p === home || p.startsWith(home + path.sep) ? '~' + p.slice(home.length) : p;
+}

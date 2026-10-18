@@ -7,6 +7,7 @@ import { createProvider } from '../providers/index.js';
 import type { Profile } from '../schemas/profile.js';
 import type { Repo } from '../schemas/repo.js';
 import type { Config } from '../store/index.js';
+import { displayPath } from '../store/paths.js';
 import { selectTop, type RankedRepo } from '../tailor/rank.js';
 import { customRole, ROLES, type Role } from '../tailor/roles.js';
 import type { Target } from '../tailor/target.js';
@@ -375,14 +376,14 @@ function DoneScreen({
       <Done>
         Resume for <Text color={ACCENT}>{target.role.title}</Text> saved
       </Done>
-      <Text dimColor>{`  ${result.files.tex}`}</Text>
+      <Text dimColor>{`  ${displayPath(result.files.tex)}`}</Text>
       {result.files.pdf ? (
         <>
           <Done>
             PDF compiled, {result.pages} page{result.pages === 1 ? '' : 's'}
             {result.shrinkLevel ? <Text dimColor> (trimmed to fit)</Text> : null}
           </Done>
-          <Text dimColor>{`  ${result.files.pdf}`}</Text>
+          <Text dimColor>{`  ${displayPath(result.files.pdf)}`}</Text>
         </>
       ) : (
         <Text dimColor>

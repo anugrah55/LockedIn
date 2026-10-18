@@ -4,7 +4,7 @@ import { openInOverleaf } from '../output/overleaf.js';
 import type { Profile } from '../schemas/profile.js';
 import type { RepoCache } from '../schemas/repo.js';
 import { loadConfig, loadProfile, loadRepos, type Config } from '../store/index.js';
-import { paths } from '../store/paths.js';
+import { displayPath, homeDir, paths } from '../store/paths.js';
 import type { Role } from '../tailor/roles.js';
 import { renderResume, profileToResume } from '../latex/render.js';
 import { saveBaseResume } from './services.js';
@@ -127,7 +127,7 @@ export function App(props: AppProps) {
             ) : (
               <Box flexDirection="column">
                 <Done>
-                  Base resume saved as LaTeX: <Text dimColor>{paths.baseTex}</Text>
+                  Base resume saved as LaTeX: <Text dimColor>{displayPath(paths.baseTex)}</Text>
                 </Done>
                 <Box marginTop={1}>
                   <Text bold color={ACCENT}>
@@ -213,7 +213,7 @@ export function App(props: AppProps) {
           </Text>
           <Text>
             <Text dimColor>Data folder    </Text>
-            {paths.profile.replace(/\/profile\.json$/, '')}
+            {displayPath(homeDir())}
           </Text>
           <Box marginTop={1}>
             <Menu
@@ -272,7 +272,7 @@ export function App(props: AppProps) {
             onDone={async (profile) => {
               await saveBaseResume(profile);
               update({ profile });
-              setScreen({ k: 'message', text: `Saved profile and ${paths.baseTex}`, then: { k: 'home' } });
+              setScreen({ k: 'message', text: `Saved profile and ${displayPath(paths.baseTex)}`, then: { k: 'home' } });
             }}
           />
         </Box>

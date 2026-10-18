@@ -28,7 +28,16 @@
     "codex",
     "github"
   ],
+  "author": "Anugrah",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anugrah55/LockedIn.git"
+  },
+  "homepage": "https://github.com/anugrah55/LockedIn#readme",
+  "bugs": {
+    "url": "https://github.com/anugrah55/LockedIn/issues"
+  },
   "dependencies": {
     "commander": "^15.0.0",
     "execa": "^10.1.1",
