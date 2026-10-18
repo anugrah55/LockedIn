@@ -37,7 +37,8 @@ export function guardTailorResult(raw: TailorResult, profile: Profile, repos: Re
   const profileProjects = new Map(profile.projects.map((p) => [p.id, p]));
   const experienceById = new Map(profile.experience.map((x) => [x.id, x]));
 
-  const global = new Evidence([
+  const global = new Evidence(
+    [
     ...profile.skills.flatMap((g) => g.items),
     ...profile.projects.flatMap((p) => [p.name, ...p.tech, ...p.bullets]),
     ...profile.experience.flatMap((x) => [x.title, ...x.bullets]),
@@ -46,7 +47,9 @@ export function guardTailorResult(raw: TailorResult, profile: Profile, repos: Re
     ...profile.certifications,
     ...profile.achievements,
     profile.summary,
-  ]);
+    ],
+    { concepts: true },
+  );
   for (const r of repos) for (const t of repoText(r)) global.add(t);
 
   // Projects
@@ -67,7 +70,7 @@ export function guardTailorResult(raw: TailorResult, profile: Profile, repos: Re
         (pp) => pp.name.toLowerCase() === repo.name.toLowerCase() || (pp.link ?? '').toLowerCase().includes(repo.url.toLowerCase()),
       );
       if (twin) texts.push(twin.name, ...twin.tech, ...twin.bullets);
-      evidence = new Evidence(texts);
+      evidence = new Evidence(texts, { concepts: true });
       source = texts.filter(Boolean).join('\n');
     } else {
       const pp = profileProjects.get(p.ref);
@@ -75,7 +78,7 @@ export function guardTailorResult(raw: TailorResult, profile: Profile, repos: Re
         warnings.push(`Dropped project "${p.name}": no CV project with id "${p.ref}".`);
         continue;
       }
-      evidence = new Evidence([pp.name, ...pp.tech, ...pp.bullets]);
+      evidence = new Evidence([pp.name, ...pp.tech, ...pp.bullets], { concepts: true });
       source = [pp.name, ...pp.tech, ...pp.bullets].join('\n');
     }
     const key = `${p.source}:${p.ref.toLowerCase()}`;

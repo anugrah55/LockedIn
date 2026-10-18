@@ -58,7 +58,7 @@ program
   .command('roles')
   .description('list the built-in internship roles')
   .action(() => {
-    for (const r of ROLES) console.log(`${r.hot ? '🔥' : '  '} ${r.id.padEnd(14)} ${r.title}`);
+    for (const r of ROLES) console.log(`${r.hot ? '✦' : ' '} ${r.id.padEnd(14)} ${r.title}`);
   });
 
 program

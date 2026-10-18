@@ -14,7 +14,7 @@ describe('TailorFlow', () => {
     const { lastFrame } = render(<TailorFlow config={config} profile={fixtureProfile()} repos={[]} onExit={() => {}} />);
     const frame = lastFrame()!;
     expect(frame).toContain('Which role are you applying for?');
-    expect(frame).toContain('🔥 GenAI / LLM Engineer');
+    expect(frame).toContain('✦ GenAI / LLM Engineer');
     expect(frame).toContain('Custom role');
   });
 

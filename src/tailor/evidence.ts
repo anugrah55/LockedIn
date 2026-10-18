@@ -41,13 +41,36 @@ export function termKey(term: string): string {
   return ALIASES[k] ?? k;
 }
 
+/**
+ * Concepts proven by a concrete tool ("Razorpay" proves "payment gateway").
+ * Only the truth guard uses these. ATS scoring stays literal, like a real ATS.
+ */
+const PAYMENT = ['razorpay', 'stripe', 'paypal', 'paytm', 'cashfree', 'phonepe', 'payu', 'upi'];
+const CONCEPTS: Record<string, string[]> = {
+  paymentgateway: PAYMENT,
+  paymentgatewayintegration: PAYMENT,
+  paymentintegration: PAYMENT,
+  authentication: ['jwt', 'oauth', 'auth', 'firebaseauth', 'passport', 'clerk', 'auth0', 'nextauth', 'login'],
+  authorization: ['jwt', 'oauth', 'rbac'],
+  containerization: ['docker', 'kubernetes', 'podman'],
+  cicd: ['githubaction', 'jenkin', 'gitlabci', 'circleci'],
+  vectordatabase: ['chromadb', 'pinecone', 'faiss', 'weaviate', 'qdrant', 'milvus', 'pgvector'],
+  largelanguagemodel: ['openai', 'gemini', 'claude', 'llama', 'gpt', 'mistral', 'groq'],
+  cloud: ['aws', 'googlecloud', 'azure'],
+  nosql: ['mongodb', 'firestore', 'dynamodb', 'cassandra', 'redi'],
+  sql: ['postgresql', 'mysql', 'sqlite'],
+};
+
 const MAX_NGRAM = 4;
 const GENERIC_SUFFIX = /\s+(apis?|sdks?|framework|library|platform|cloud|stack)$/i;
 
 export class Evidence {
   private keys = new Set<string>();
 
-  constructor(texts: Array<string | null | undefined> = []) {
+  constructor(
+    texts: Array<string | null | undefined> = [],
+    private readonly opts: { concepts?: boolean } = {},
+  ) {
     for (const t of texts) this.add(t);
   }
 
@@ -73,6 +96,7 @@ export class Evidence {
     const key = termKey(term);
     if (!key) return false;
     if (this.keys.has(key)) return true;
+    if (this.opts.concepts && CONCEPTS[key]?.some((k) => this.keys.has(k))) return true;
     // "ChromaDB (Vector DB)": the parenthetical is a description; the base term must be backed.
     const base = term.replace(/\([^)]*\)/g, '').trim();
     if (base && base !== term.trim()) return this.has(base);

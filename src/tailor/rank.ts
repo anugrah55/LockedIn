@@ -9,14 +9,20 @@ export interface RankedRepo {
   reason: string;
 }
 
-const SYSTEM = `You are a senior tech recruiter in India who screens internship applications.
-Given a candidate's GitHub repositories and a target role, score how strongly each repository demonstrates skills relevant to that role.
+const SYSTEM = `You are a senior tech recruiter in India screening internship applications. Given a candidate's GitHub repositories and a target role, score how strongly each repository PROVES skills relevant to that role.
 
-Scoring guidance:
-- Judge only from the provided metadata and README. Do not assume features that are not described.
-- Reward real, working projects in the role's domain, depth (APIs, deployment, tests, data, models), and recency.
-- Penalise coursework/assignment dumps, tutorial clones, empty READMEs, and repos unrelated to the role.
-- Return every repository that scores 30 or more, best first, with one concrete sentence explaining the fit.`;
+<rubric>
+- Relevance (50%): is the project in the role's domain, using its core tools and concepts?
+- Depth (30%): real engineering such as APIs, auth, data pipelines, models, tests, CI, deployment, or non-trivial architecture.
+- Credibility (20%): a clear README, deployed/live link, pinned, recent activity, stars.
+</rubric>
+
+<rules>
+- Judge only from the provided metadata and README. Never assume features that are not described.
+- Penalise coursework/assignment dumps, tutorial clones, empty or template READMEs, and repos unrelated to the role.
+- Return every repository that scores 30 or more, best first.
+- "reason": one concrete sentence naming the specific evidence (tech, feature or deployment) that makes it fit.
+</rules>`;
 
 function summarize(r: Repo): string {
   return [
@@ -45,4 +51,10 @@ export async function rankRepos(provider: Provider, target: Target, repos: Repo[
       return true;
     })
     .sort((a, b) => b.score - a.score);
+}
+
+/** Strongest repos to feature: up to `max` scoring ≥ `minScore`, but never fewer than 2. */
+export function selectTop(ranked: RankedRepo[], max = 4, minScore = 50): Repo[] {
+  const strong = ranked.filter((r) => r.score >= minScore).slice(0, max);
+  return (strong.length >= 2 ? strong : ranked.slice(0, Math.min(2, max))).map((r) => r.repo);
 }

@@ -2,35 +2,20 @@ import { Box, Text, useInput, usePaste } from 'ink';
 import SelectInput from 'ink-select-input';
 import Spinner from 'ink-spinner';
 import React, { useEffect, useState } from 'react';
+import { Logo, MiniLogo, StepDots } from './graphics.js';
 
 export const ACCENT = '#a78bfa';
 export const OK = '#4ade80';
 export const WARN = '#facc15';
 export const ERR = '#f87171';
 
+/** Full lock logo on main screens, a one-line mark on inner screens. */
 export function Banner({ subtitle }: { subtitle?: string }) {
-  return (
-    <Box flexDirection="column" marginBottom={1}>
-      <Text>
-        <Text color={ACCENT} bold>
-          ▌LockedIn
-        </Text>
-        <Text dimColor> — one resume per role, built from your real work</Text>
-      </Text>
-      {subtitle ? <Text dimColor>{subtitle}</Text> : null}
-    </Box>
-  );
+  return subtitle ? <MiniLogo title={subtitle} /> : <Logo />;
 }
 
 export function Step({ n, total, title }: { n: number; total: number; title: string }) {
-  return (
-    <Box marginBottom={1}>
-      <Text color={ACCENT} bold>
-        [{n}/{total}]{' '}
-      </Text>
-      <Text bold>{title}</Text>
-    </Box>
-  );
+  return <StepDots n={n} total={total} title={title} />;
 }
 
 /** Spinner with an elapsed-seconds counter — LLM calls can take a minute. */

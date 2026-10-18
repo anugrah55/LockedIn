@@ -2,9 +2,10 @@
  * Headless end-to-end run of the full pipeline against real services.
  * Usage: LOCKEDIN_HOME=/tmp/x npx tsx scripts/e2e.ts <cv-file> [role-id ...]
  */
-import { finalize, importCv, saveBaseResume, syncGithub, tailor, rank, MAX_RANKED } from '../src/app/services.js';
+import { analyze, finalize, importCv, saveBaseResume, syncGithub, tailor, MAX_RANKED } from '../src/app/services.js';
 import { resolveGithubToken } from '../src/github/auth.js';
 import { createProvider } from '../src/providers/index.js';
+import { selectTop } from '../src/tailor/rank.js';
 import { ROLES } from '../src/tailor/roles.js';
 
 const [cvFile, ...roleIds] = process.argv.slice(2);
@@ -23,16 +24,19 @@ console.log(`[${t()}] github: ${cache.repos.length} repos`);
 
 for (const id of roleIds.length ? roleIds : ['backend']) {
   const role = ROLES.find((r) => r.id === id)!;
-  const target = { role, jobDescription: null };
-  const ranked = await rank(provider, target, cache.repos);
+  const target = { role, jobDescription: process.env.LOCKEDIN_JD ?? null };
+  const { ranked, keywords } = await analyze(provider, target, cache.repos);
+  console.log(`   keywords: required=${keywords.required.join(', ')} | preferred=${keywords.preferred.join(', ')}`);
   console.log(`\n[${t()}] ${role.title} — ranked:`);
   for (const r of ranked.slice(0, 6)) console.log(`   ${String(r.score).padStart(3)}  ${r.repo.name} — ${r.reason}`);
-  const draft = await tailor(provider, target, profile, ranked.slice(0, MAX_RANKED).map((r) => r.repo));
+  const draft = await tailor(provider, target, profile, selectTop(ranked, MAX_RANKED), keywords);
+  console.log(`   ATS: ${draft.ats.before.total} -> ${draft.ats.after.total} · missing: ${draft.ats.after.keywords.missing.join(', ')}`);
+  for (const p of draft.resume.projects) for (const b of p.bullets) console.log(`     • [${p.name}] ${b}`);
   console.log(`[${t()}] tailored: projects = ${draft.resume.projects.map((p) => `${p.name} [${p.tech.join(', ')}]`).join(' | ')}`);
   console.log(`   skills: ${draft.resume.skills.map((g) => `${g.category}: ${g.items.join(', ')}`).join(' ; ')}`);
   console.log(`   objective: ${draft.resume.objective}`);
   console.log(`   guard warnings (${draft.warnings.length}):`);
   for (const w of draft.warnings) console.log(`     - ${w}`);
-  const out = await finalize(target, draft.resume);
-  console.log(`[${t()}] saved ${out.files.tex} · pdf=${out.files.pdf} · pages=${out.pages} · shrink=${out.shrinkLevel} · compileError=${out.compileError}`);
+  const out = await finalize(target, draft.resume, keywords);
+  console.log(`[${t()}] saved ${out.files.tex} · pdf=${out.files.pdf} · pages=${out.pages} · shrink=${out.shrinkLevel} · compileError=${out.compileError} · final ATS=${out.ats.total}`);
 }

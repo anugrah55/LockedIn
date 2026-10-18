@@ -50,6 +50,19 @@ describe('termKey / Evidence', () => {
   });
 });
 
+describe('concepts', () => {
+  it('lets a concrete tool prove a concept only when enabled', () => {
+    const text = ['Integrated Razorpay checkout with JWT login and GitHub Actions'];
+    const guard = new Evidence(text, { concepts: true });
+    expect(guard.has('Payment gateway integration')).toBe(true);
+    expect(guard.has('Authentication')).toBe(true);
+    expect(guard.has('CI/CD')).toBe(true);
+    expect(guard.has('Vector database')).toBe(false);
+    // ATS scoring is literal: a real ATS won't infer "payment gateway" from "Razorpay".
+    expect(new Evidence(text).has('Payment gateway integration')).toBe(false);
+  });
+});
+
 describe('guardTailorResult', () => {
   it('drops projects that reference nothing real', () => {
     const { result, warnings } = guardTailorResult(

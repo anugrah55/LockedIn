@@ -40,6 +40,22 @@ lockedin roles           # list built-in roles
 
 Every tailored resume is saved to `~/.lockedin/outputs/<role>-<date>.{tex,json,pdf}`. Press **Open in Overleaf** to open it straight in a new Overleaf project.
 
+## ATS score
+
+Every tailored resume gets a 0–100 ATS score, shown as **before → after** tailoring:
+
+| Part | Weight | What it measures |
+|---|---|---|
+| Keywords | 70 | Target keywords found in the resume. Required ones count double. |
+| Impact | 15 | Bullets that open with a strong action verb, and bullets with numbers. |
+| Structure | 15 | Contact details and core sections present, no first person, no overlong bullets, one page. |
+
+Where the keywords come from:
+- With a pasted job description, the AI extracts them from the JD.
+- Without one, the role's curated keyword list is used.
+
+Code computes the score deterministically, so the same resume always gets the same score. Missing keywords are listed, so you can see what you'd need to learn or showcase. They're never added for you.
+
 ## No-fabrication guard
 
 The model may only **select, reorder and reword** what's already in your CV and repos. A deterministic guard then checks its output:

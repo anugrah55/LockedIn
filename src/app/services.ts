@@ -1,4 +1,6 @@
 // Orchestration used by the TUI screens. Each function is one user-visible step.
+import { extractKeywords, type KeywordSet } from '../ats/keywords.js';
+import { scoreResume, type AtsReport } from '../ats/score.js';
 import { extractCv } from '../cv/extract.js';
 import { parseCv } from '../cv/parse.js';
 import { resolveGithubToken } from '../github/auth.js';
@@ -46,8 +48,18 @@ export async function saveBaseResume(profile: Profile): Promise<string> {
 
 export const MAX_RANKED = 4;
 
-export async function rank(provider: Provider, target: Target, repos: Repo[]): Promise<RankedRepo[]> {
-  return rankRepos(provider, target, repos);
+export interface Analysis {
+  ranked: RankedRepo[];
+  keywords: KeywordSet;
+}
+
+/** Rank repos and extract ATS keywords in parallel. */
+export async function analyze(provider: Provider, target: Target, repos: Repo[]): Promise<Analysis> {
+  const [ranked, keywords] = await Promise.all([
+    repos.length ? rankRepos(provider, target, repos) : Promise.resolve([]),
+    extractKeywords(provider, target),
+  ]);
+  return { ranked, keywords };
 }
 
 export interface TailorDraft {
@@ -56,15 +68,24 @@ export interface TailorDraft {
   repos: Repo[];
   /** Repo name behind each resume project (null for CV-only projects), same order. */
   projectRefs: Array<string | null>;
+  ats: { before: AtsReport; after: AtsReport };
 }
 
-export async function tailor(provider: Provider, target: Target, profile: Profile, repos: Repo[]): Promise<TailorDraft> {
-  const { result, warnings } = await tailorResume(provider, target, profile, repos);
+export async function tailor(
+  provider: Provider,
+  target: Target,
+  profile: Profile,
+  repos: Repo[],
+  keywords: KeywordSet,
+): Promise<TailorDraft> {
+  const { result, warnings } = await tailorResume(provider, target, profile, repos, keywords);
+  const resume = buildResume(profile, repos, result);
   return {
-    resume: buildResume(profile, repos, result),
+    resume,
     warnings,
     repos,
     projectRefs: result.projects.map((p) => (p.source === 'repo' ? p.ref : null)),
+    ats: { before: scoreResume(profileToResume(profile), keywords), after: scoreResume(resume, keywords) },
   };
 }
 
@@ -74,10 +95,11 @@ export interface Finalized {
   pages: number | null;
   shrinkLevel: number;
   compileError: string | null;
+  ats: AtsReport;
 }
 
 /** Render → (optionally) compile & fit to one page → save. */
-export async function finalize(target: Target, resume: Resume): Promise<Finalized> {
+export async function finalize(target: Target, resume: Resume, keywords: KeywordSet): Promise<Finalized> {
   const tectonic = await findTectonic();
   let tex = renderResume(resume);
   let pdf: Buffer | null = null;
@@ -95,8 +117,9 @@ export async function finalize(target: Target, resume: Resume): Promise<Finalize
       compileError = err instanceof Error ? err.message : String(err);
     }
   }
-  const files = await saveOutputs(roleSlug(target.role), finalResume, tex, pdf);
-  return { files, tex, pages, shrinkLevel, compileError };
+  const ats = scoreResume(finalResume, keywords, { pages });
+  const files = await saveOutputs(roleSlug(target.role), finalResume, tex, pdf, { ats, keywords });
+  return { files, tex, pages, shrinkLevel, compileError, ats };
 }
 
 export type { Config };

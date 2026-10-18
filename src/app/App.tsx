@@ -10,6 +10,7 @@ import { renderResume, profileToResume } from '../latex/render.js';
 import { saveBaseResume } from './services.js';
 import { CvStep, GithubStep, ProfileSummary, ProviderStep, RepoSummary } from './steps.js';
 import { TailorFlow } from './Tailor.js';
+import { Logo } from './graphics.js';
 import { ACCENT, Banner, Done, ErrorBox, Hint, Menu, Step, Task } from './ui.js';
 
 export type Mode = 'home' | 'onboard' | 'tailor' | 'sync' | 'cv' | 'config';
@@ -84,7 +85,9 @@ export function App(props: AppProps) {
       const { step } = screen;
       return (
         <Box flexDirection="column">
-          <Banner subtitle="Let's get you set up. This takes about two minutes." />
+          <Logo />
+          <Text dimColor>Let's get you set up. This takes about two minutes.</Text>
+          <Text> </Text>
           {step > 1 ? <Done>AI provider: {state.config.provider === 'codex' ? 'Codex CLI' : 'Claude Code'}</Done> : null}
           {step > 2 && state.repos ? <RepoSummary cache={state.repos} /> : null}
           {step > 3 && state.profile ? <Done>CV imported for {state.profile.contact.name}</Done> : null}
@@ -128,7 +131,7 @@ export function App(props: AppProps) {
                 </Done>
                 <Box marginTop={1}>
                   <Text bold color={ACCENT}>
-                    You're locked in. 🔒
+                    You're locked in.
                   </Text>
                 </Box>
                 <Box marginTop={1}>
@@ -156,23 +159,29 @@ export function App(props: AppProps) {
       return (
         <Box flexDirection="column">
           <Banner />
-          <Text>
-            <Text dimColor>AI </Text>
-            {state.config.provider === 'codex' ? 'Codex' : 'Claude'}
-            <Text dimColor>  ·  GitHub </Text>@{state.repos?.login} ({state.repos?.repos.length} repos, synced{' '}
-            {state.repos ? ago(state.repos.fetchedAt) : 'never'})
-            <Text dimColor>  ·  CV </Text>
-            {state.profile?.contact.name}
-          </Text>
+          <Box flexDirection="column" borderStyle="round" borderColor="gray" paddingX={1} alignSelf="flex-start">
+            <Text>
+              <Text dimColor>{'you      '}</Text>
+              <Text bold>{state.profile?.contact.name}</Text>
+            </Text>
+            <Text>
+              <Text dimColor>{'ai       '}</Text>
+              {state.config.provider === 'codex' ? 'Codex CLI' : 'Claude Code'}
+            </Text>
+            <Text>
+              <Text dimColor>{'github   '}</Text>@{state.repos?.login}
+              <Text dimColor>{`  ${state.repos?.repos.length} repos · synced ${state.repos ? ago(state.repos.fetchedAt) : 'never'}`}</Text>
+            </Text>
+          </Box>
           <Box marginTop={1}>
             <Menu
               items={[
-                { label: '🎯 Tailor my resume for a role', value: 'tailor' as const },
+                { label: '◎  Tailor my resume for a role', value: 'tailor' as const },
                 { label: '⟳  Re-sync GitHub projects', value: 'sync' as const },
-                { label: '📄 Import an updated CV', value: 'cv' as const },
+                { label: '▤  Import an updated CV', value: 'cv' as const },
                 { label: '↗  Open base resume in Overleaf', value: 'overleaf' as const },
                 { label: '⚙  Settings', value: 'settings' as const },
-                { label: '   Quit', value: 'quit' as const },
+                { label: '×  Quit', value: 'quit' as const },
               ]}
               onSelect={(v) => {
                 if (v === 'tailor') setScreen({ k: 'tailor' });
