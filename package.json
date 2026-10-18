@@ -1,0 +1,54 @@
+{
+  "name": "lockedin",
+  "version": "0.1.0",
+  "description": "Terminal app that tailors your resume to every internship role using your GitHub projects and your logged-in Claude or Codex CLI.",
+  "type": "module",
+  "bin": {
+    "lockedin": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsx src/cli.tsx",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "smoke": "tsx scripts/smoke.ts"
+  },
+  "keywords": [
+    "resume",
+    "latex",
+    "internship",
+    "cli",
+    "claude",
+    "codex",
+    "github"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^15.0.0",
+    "execa": "^10.1.1",
+    "ink": "^8.0.0",
+    "ink-select-input": "^6.2.0",
+    "ink-spinner": "^5.0.0",
+    "ink-text-input": "^6.0.0",
+    "mammoth": "^1.13.0",
+    "open": "^11.0.4",
+    "react": "^19.3.1",
+    "unpdf": "^1.9.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.3.0",
+    "ink-testing-library": "^4.0.0",
+    "tsup": "^9.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}

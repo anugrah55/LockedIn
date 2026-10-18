@@ -1,0 +1,70 @@
+{
+  "contact": {
+    "name": "Priya Sharma",
+    "email": "priya.sharma_dev@example.com",
+    "phone": "+91 98765 43210",
+    "location": "Pune, India",
+    "linkedin": "https://www.linkedin.com/in/priya-sharma/",
+    "github": "github.com/priyasharma",
+    "website": null
+  },
+  "summary": null,
+  "education": [
+    {
+      "institution": "Vishwakarma Institute of Technology",
+      "degree": "B.Tech in Computer Science & Engineering",
+      "location": "Pune, MH",
+      "start": "Aug 2022",
+      "end": "May 2026",
+      "score": "CGPA: 8.9/10",
+      "coursework": ["Data Structures & Algorithms", "DBMS", "Operating Systems", "Machine Learning"]
+    }
+  ],
+  "experience": [
+    {
+      "id": "exp-1",
+      "organization": "Finly Labs",
+      "title": "Backend Developer Intern",
+      "location": "Remote",
+      "start": "May 2025",
+      "end": "Jul 2025",
+      "bullets": [
+        "Built REST APIs in Node.js + Express for a UPI payments dashboard serving 5k users",
+        "Cut p95 latency by 40% using Redis caching & query indexing on PostgreSQL",
+        "Wrote CI pipelines with GitHub Actions; 100% of PRs now run tests"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-1",
+      "name": "NyayaBot",
+      "tech": ["Python", "LangChain", "FastAPI", "ChromaDB"],
+      "link": "https://github.com/priyasharma/nyayabot",
+      "date": "2025",
+      "bullets": [
+        "RAG chatbot answering questions on Indian legal acts (IPC → BNS) with source citations",
+        "Indexed 1,200+ documents; ~85% answer accuracy on a 100-question eval set"
+      ]
+    },
+    {
+      "id": "proj-2",
+      "name": "C# & C++ Notes_{draft}",
+      "tech": ["React", "Tailwind"],
+      "link": null,
+      "date": null,
+      "bullets": ["Notes app with 50% discount #tags, ~shortcuts^ and $pricing \\ edge-cases 🚀"]
+    }
+  ],
+  "skills": [
+    { "category": "Languages", "items": ["Python", "JavaScript", "TypeScript", "C++", "SQL"] },
+    { "category": "Frameworks & Libraries", "items": ["React", "Node.js", "Express", "FastAPI", "LangChain"] },
+    { "category": "Tools & Platforms", "items": ["Git", "Docker", "AWS", "PostgreSQL", "Redis"] }
+  ],
+  "achievements": [
+    "Winner – Smart India Hackathon 2024 (Software edition)",
+    "LeetCode Knight (rating 1950); solved 600+ problems",
+    "Core team member, GDSC VIT Pune"
+  ],
+  "certifications": ["AWS Certified Cloud Practitioner"]
+}

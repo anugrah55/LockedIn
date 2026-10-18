@@ -1,0 +1,86 @@
+[
+  {
+    "id": "ai-ml",
+    "title": "AI / ML Engineer",
+    "hot": true,
+    "description": "Builds and deploys machine-learning models: data pipelines, training, evaluation and model serving.",
+    "keywords": ["Python", "PyTorch", "TensorFlow", "scikit-learn", "NumPy", "Pandas", "model training", "evaluation", "feature engineering", "MLOps", "computer vision", "NLP"]
+  },
+  {
+    "id": "genai",
+    "title": "GenAI / LLM Engineer",
+    "hot": true,
+    "description": "Builds products on large language models: RAG, agents, prompt engineering, fine-tuning, evals and LLM APIs.",
+    "keywords": ["LLMs", "RAG", "LangChain", "LlamaIndex", "vector databases", "embeddings", "agents", "prompt engineering", "fine-tuning", "OpenAI API", "Claude API", "Hugging Face", "evals"]
+  },
+  {
+    "id": "backend",
+    "title": "Backend Engineer",
+    "hot": true,
+    "description": "Designs APIs, services and databases; cares about scalability, reliability and performance.",
+    "keywords": ["REST", "GraphQL", "Node.js", "Express", "Django", "FastAPI", "Spring Boot", "Go", "PostgreSQL", "MongoDB", "Redis", "microservices", "authentication", "caching", "system design"]
+  },
+  {
+    "id": "frontend",
+    "title": "Frontend Engineer",
+    "hot": false,
+    "description": "Builds fast, accessible, responsive web interfaces.",
+    "keywords": ["React", "Next.js", "TypeScript", "JavaScript", "HTML", "CSS", "Tailwind", "state management", "accessibility", "responsive design", "performance", "Vite"]
+  },
+  {
+    "id": "fullstack",
+    "title": "Full-Stack Engineer",
+    "hot": true,
+    "description": "Ships end-to-end features across frontend, backend and deployment.",
+    "keywords": ["React", "Next.js", "Node.js", "TypeScript", "REST", "PostgreSQL", "MongoDB", "authentication", "deployment", "Docker", "Vercel"]
+  },
+  {
+    "id": "devops",
+    "title": "DevOps / Cloud Engineer",
+    "hot": true,
+    "description": "Automates infrastructure, CI/CD, containers and cloud deployments.",
+    "keywords": ["Docker", "Kubernetes", "AWS", "GCP", "Azure", "Terraform", "CI/CD", "GitHub Actions", "Linux", "Bash", "monitoring", "Prometheus", "Grafana", "Nginx"]
+  },
+  {
+    "id": "data-eng",
+    "title": "Data Engineer",
+    "hot": false,
+    "description": "Builds reliable data pipelines, warehouses and ETL/ELT workflows.",
+    "keywords": ["SQL", "Python", "ETL", "Apache Spark", "Airflow", "Kafka", "dbt", "data warehouse", "BigQuery", "Snowflake", "data modeling", "Pandas"]
+  },
+  {
+    "id": "data-science",
+    "title": "Data Scientist / Analyst",
+    "hot": false,
+    "description": "Turns data into insights through analysis, statistics, visualisation and predictive models.",
+    "keywords": ["Python", "SQL", "Pandas", "NumPy", "statistics", "data visualization", "Matplotlib", "Power BI", "Tableau", "EDA", "machine learning", "Jupyter"]
+  },
+  {
+    "id": "mobile",
+    "title": "Mobile Developer (Android / Flutter)",
+    "hot": false,
+    "description": "Builds mobile apps for Android/iOS with native or cross-platform frameworks.",
+    "keywords": ["Flutter", "Dart", "Kotlin", "Android", "React Native", "Firebase", "Jetpack Compose", "REST", "state management", "Play Store"]
+  },
+  {
+    "id": "security",
+    "title": "Cybersecurity Engineer",
+    "hot": false,
+    "description": "Finds and fixes vulnerabilities; secures apps, networks and infrastructure.",
+    "keywords": ["penetration testing", "OWASP", "network security", "Linux", "Burp Suite", "Wireshark", "cryptography", "CTF", "threat modeling", "Python"]
+  },
+  {
+    "id": "web3",
+    "title": "Blockchain / Web3 Developer",
+    "hot": false,
+    "description": "Builds smart contracts and decentralised applications.",
+    "keywords": ["Solidity", "Ethereum", "smart contracts", "Web3.js", "ethers.js", "Hardhat", "Rust", "Solana", "dApps"]
+  },
+  {
+    "id": "sde",
+    "title": "Software Development Engineer (SDE)",
+    "hot": true,
+    "description": "General software engineering: strong fundamentals, DSA, clean code and shipping features.",
+    "keywords": ["Data Structures", "Algorithms", "OOP", "Java", "C++", "Python", "system design", "Git", "testing", "DBMS", "Operating Systems"]
+  }
+]
